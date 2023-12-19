@@ -74,12 +74,9 @@ class ProjectManager:
         """
         url = f'{BASE_URL}{API_ENDPOINTS["ProjectSection"]}'
         print(url)
-        cur_sections = self.get_project_sections_by_project_id(project_id)
-        new_sections = [{"projectId": project_id, "name": section_name}
-                        for section_name in section_names]
-        result = self.session.post(url, json={
-            "add": cur_sections + new_sections
-        })
+        sections = [{"projectId": project_id, "name": section_name}
+                    for section_name in section_names]
+        result = self.session.post(url, json={"add": sections})
         Utils.json_pretty_print(result.json())
 
     def get_project_to_id_mapping(self):
