@@ -44,16 +44,40 @@ class TaskManager:
         Utils.json_pretty_print(result)
         return result["id"]
 
-    def get_task_by_id(self, task_id):
+    def get_task_by_id(self, task_id) -> any:
         """Get task object by task id.
 
         Args:
-            task_id (_type_): task id
+            task_id (str): task id
+
+        Returns:
+            any: json object of task
         """
         url = f'{BASE_URL}{API_ENDPOINTS["GetTask"].replace("{task_id}", task_id)}'
         print(url)
         result = self.session.get(url).json()
         Utils.json_pretty_print(result)
+        return result
+
+    def get_task_focus_duration(self, task_id) -> int:
+        """Get recorded task focus duration for task and all its sub-tasks
+
+        Args:
+            task_id (str): task id
+
+        Returns:
+            int: total focus duration of task and sub-tasks
+        """
+        task = self.get_task_by_id(task_id)
+        if task is None or 'focusSummaries' not in task.keys():
+            return 0
+        cur_task_focus_history = [item for sublist in [i['focuses'] for i in task['focusSummaries']] for item in sublist]
+        total_duration = sum(item[2] for item in cur_task_focus_history if len(item) > 2)
+        if 'childIds' in task.keys():
+            child_tasks = task['childIds']
+            for child_task_id in child_tasks:
+                total_duration += self.get_task_focus_duration(child_task_id)
+        return total_duration
 
     def batch_add_tasks(self, tasks: list[TaskConfig]) -> list[str]:
         """Add list of new tasks based on configuration

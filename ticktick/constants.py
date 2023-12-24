@@ -3,6 +3,8 @@ import secrets
 PASSWORD = {'username': 'REPLACE_WITH_YOUR_USERNAME',
             'password': 'REPLACE_WITH_YOUR_PASSWORD'}
 
+TOKEN_FILE = '/tmp/token.txt'
+
 BASE_URL = 'https://api.ticktick.com/api/v2'
 
 API_ENDPOINTS = {
