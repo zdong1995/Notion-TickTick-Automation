@@ -26,7 +26,7 @@ class Utils:
         if not file_path.exists():
             Utils.auth_and_refresh_token(session)
         with open(file_path, 'r', encoding='utf-8') as file:
-            token = file.read()
+            token = file.read().replace('\n', '')  # truncate potential character when save token file
         session.cookies['t'] = token
         return session
 

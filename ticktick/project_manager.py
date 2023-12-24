@@ -32,7 +32,6 @@ class ProjectManager:
             str: project id
         """
         url = f'{BASE_URL}{API_ENDPOINTS["AddProject"]}'
-        print(url)
         result = self.session.post(url, json=project).json()
         Utils.json_pretty_print(result)
         return result["id"]
@@ -44,7 +43,6 @@ class ProjectManager:
             project_id (str): project id
         """
         url = f'{BASE_URL}{API_ENDPOINTS["GetAllProjects"]}'
-        print(url)
         result = self.session.get(url).json()
         for project in result:
             if project["id"] == project_id:
@@ -60,7 +58,6 @@ class ProjectManager:
             list[any]: json array of project sections definition
         """
         url = f'{BASE_URL}{API_ENDPOINTS["GetProjectSections"].replace("{project_id}", project_id)}'
-        print(url)
         result = self.session.get(url).json()
         Utils.json_pretty_print(result)
         return result
@@ -73,15 +70,14 @@ class ProjectManager:
             section_names (list[str]): new sections to be added to project
         """
         url = f'{BASE_URL}{API_ENDPOINTS["ProjectSection"]}'
-        print(url)
         sections = [{"projectId": project_id, "name": section_name}
                     for section_name in section_names]
         result = self.session.post(url, json={"add": sections})
-        Utils.json_pretty_print(result.json())
+        project_section_id = list(result.json()['id2etag'].keys())[0]
+        print(project_section_id)
 
     def get_project_to_id_mapping(self):
         url = f'{BASE_URL}{API_ENDPOINTS["GetAllProjects"]}'
-        print(url)
         result = self.session.get(url)
         project_list = {}
         for project in result.json():

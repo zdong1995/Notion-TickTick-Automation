@@ -39,7 +39,6 @@ class TaskManager:
             str: task id
         """
         url = f'{BASE_URL}{API_ENDPOINTS["AddTask"]}'
-        print(url)
         result = self.session.post(url, json=task).json()
         Utils.json_pretty_print(result)
         return result["id"]
@@ -54,7 +53,6 @@ class TaskManager:
             any: json object of task
         """
         url = f'{BASE_URL}{API_ENDPOINTS["GetTask"].replace("{task_id}", task_id)}'
-        print(url)
         result = self.session.get(url).json()
         Utils.json_pretty_print(result)
         return result
@@ -89,7 +87,6 @@ class TaskManager:
             list[str]: list of task id
         """
         url = f'{BASE_URL}{API_ENDPOINTS["BatchAddTask"]}'
-        print(url)
         result = self.session.post(url, json={"add": tasks}).json()
         Utils.json_pretty_print(result)
         return result["id2etag"].keys()
