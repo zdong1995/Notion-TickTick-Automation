@@ -64,7 +64,7 @@ class TaskManager:
             task_id (str): task id
 
         Returns:
-            int: total focus duration of task and sub-tasks
+            int: total focus duration of task and sub-tasks, unit seconds
         """
         task = self.get_task_by_id(task_id)
         if task is None or 'focusSummaries' not in task.keys():
