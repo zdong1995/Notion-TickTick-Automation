@@ -15,13 +15,14 @@ Unofficial TickTick V2 API implemented by Python with basic usage.
 
 ### Usage
 
-- `add_new_task`
-  - Add task to defined project and project section: `python3 main.py add_new_task --new_task_name {TASK_NAME} --project_id {PROJECT_ID} --section_id {SECTION_ID}`
-  - If no project section declared, task will be added into first section: `python3 main.py add_new_task --new_task_name {TASK_NAME} --project_id {PROJECT_ID}`
-  - If no project section and project declared, task will be added into inbox: `python3 main.py add_new_task --new_task_name {TASK_NAME}`
-- `add_new_project`
-  - `python3 main.py add_new_project --new_project_name test_project`
-- `add_new_project_section`
-  - `python3 main.py add_new_project_section --new_section_name {SECTION_NAME} --project_id {PROJECT_ID}`
+- `add_new_task`: `python3 main.py add_new_task --task_name {TASK_NAME} --project_id {PROJECT_ID} --section_id {SECTION_ID} --content {CONTENT}`
+  - if no project section declared, task will be added into first section: `python3 main.py add_new_task --task_name {TASK_NAME} --project_id {PROJECT_ID}`
+  - if no project section and project declared, task will be added into inbox: `python3 main.py add_new_task --task_name {TASK_NAME}`
+- `update_task`: `python3 main.py update_task --task_id {TASK_ID} --task_name {TASK_NAME} --project_id {PROJECT_ID} --section_id {SECTION_ID} --content {CONTENT}`
+  - only need to include the task field needed to be updated in the command
 - `get_task_focus_duration`: get total focus time of given task and all its subtasks
   - `python3 main.py get_task_focus_duration --task_id {TASK_ID}`
+- `add_new_project`: `python3 main.py add_new_project --project_name {PROJECT_NAME}`
+- `update_project`: `python3 main.py update_project --project_id {PROJECT_ID} --project_name {PROJECT_NAME}`
+- `add_new_project_section`: `python3 main.py add_new_project_section --section_name {SECTION_NAME} --project_id {PROJECT_ID}`
+- `update_project_section_name`: `python3 main.py update_project_section_name --project_id {PROJECT_ID} --section_id {SECTION_ID} --section_name {SECTION_NAME}`

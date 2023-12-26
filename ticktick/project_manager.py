@@ -33,7 +33,6 @@ class ProjectManager:
         """
         url = f'{BASE_URL}{API_ENDPOINTS["AddProject"]}'
         result = self.session.post(url, json=project).json()
-        Utils.json_pretty_print(result)
         return result["id"]
 
     def get_project_by_id(self, project_id: str):
@@ -46,9 +45,23 @@ class ProjectManager:
         result = self.session.get(url).json()
         for project in result:
             if project["id"] == project_id:
-                Utils.json_pretty_print(project)
+                return project
 
-    def get_project_sections_by_project_id(self, project_id: str) -> list[any]:
+    def update_project(self, project_id: str, project: ProjectConfig) -> str:
+        """Update project configuration for existing project.
+
+        Raises:
+            ValueError: A project_id must be provided for updating a project.
+        """
+        if not project_id:
+            raise ValueError("A project_id must be provided for updating a project.")
+        url = f'{BASE_URL}{API_ENDPOINTS["BatchProject"]}'
+        original_project = self.get_project_by_id(project_id)
+        for key, value in project.items():
+            original_project[key] = value
+        self.session.post(url, json={"update": [original_project]})
+
+    def get_all_project_sections(self, project_id: str) -> list[any]:
         """Get all project sections definitions for given project id.
 
         Args:
@@ -59,8 +72,23 @@ class ProjectManager:
         """
         url = f'{BASE_URL}{API_ENDPOINTS["GetProjectSections"].replace("{project_id}", project_id)}'
         result = self.session.get(url).json()
-        Utils.json_pretty_print(result)
         return result
+
+    def get_project_section(self, section_id: str, project_id: str) -> any:
+        """Get specific project section definitions by project id and section id.
+
+        Args:
+            section_id (str): section id
+            project_id (str): project id
+
+        Returns:
+            any: json object of project section definition
+        """
+        all_sections = self.get_all_project_sections(project_id)
+        for section in all_sections:
+            if section['id'] == section_id:
+                return section
+        raise ValueError("Section id doesn't exist for given project id.")
 
     def add_new_project_section(self, project_id: str, section_names: list[str]):
         """Add new sections to given project.
@@ -74,14 +102,19 @@ class ProjectManager:
                     for section_name in section_names]
         result = self.session.post(url, json={"add": sections})
         project_section_id = list(result.json()['id2etag'].keys())[0]
-        print(project_section_id)
+        return project_section_id
 
-    def get_project_to_id_mapping(self):
-        url = f'{BASE_URL}{API_ENDPOINTS["GetAllProjects"]}'
-        result = self.session.get(url)
-        project_list = {}
-        for project in result.json():
-            project_list[project['name']] = project['id']
-        for key, value in project_list.items():
-            print(f"{key}: {value}")
-        return project_list
+    def update_project_section_name(self, section_id: str, project_id: str, section_name: str):
+        """Update section name of existing project section.
+
+        Args:
+            section_id (str): section id
+            project_id (str): project id
+            section_names (str): new sections name to be updated
+        """
+        if not section_id or not project_id or not section_name:
+            raise ValueError('Need define section_id, project_id, section_name.')
+        url = f'{BASE_URL}{API_ENDPOINTS["ProjectSection"]}'
+        section = self.get_project_section(section_id, project_id)
+        section['name'] = section_name
+        self.session.post(url, json={"update": [section]})

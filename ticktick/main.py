@@ -1,34 +1,55 @@
 import argparse
+from task_manager import TaskConfig
 from ticktick_manager import TicktickManager
+
+
+def build_task_config(args: argparse.Namespace, is_new_task: bool = False) -> TaskConfig:
+    """Build task config from arg parser
+
+    Args:
+        args (argparse.Namespace): args from argparser
+        is_new_task (bool, optional): flag to differentiate new task and existing task. Defaults to False.
+
+    Returns:
+        TaskConfig: task configuration used to add task or update task
+    """
+    config_props = {
+        'title': 'task_name',
+        'projectId': 'project_id',
+        'columnId': 'section_id',
+        'id': 'task_id',
+        'content': 'content'
+    }
+    task_config: TaskConfig = {key: getattr(args, value) for key, value in config_props.items() if getattr(args, value)}
+    if is_new_task:
+        task_config.update({'tags': ['notion']})
+    return task_config
 
 
 def main():
     parser = argparse.ArgumentParser()
     tt = TicktickManager()
     parser.add_argument('mode', help='command mode')
-
-    parser.add_argument('--new_task_name', help='name of TickTick task to be created', default='default_value')
-    parser.add_argument('--new_project_name', help='name of TickTick project to be created', default='default_value')
-    parser.add_argument('--new_section_name', help='name of TickTick project section to be created', default='default_value')
-    parser.add_argument('--task_id', help='TickTick task id', default='default_value')
-    parser.add_argument('--project_id', help='TickTick project id', default='default_value')
-    parser.add_argument('--section_id', help='TickTick section id', default='default_value')
+    parser.add_argument('--task_name', help='name of TickTick task')
+    parser.add_argument('--project_name', help='name of TickTick project to be created')
+    parser.add_argument('--section_name', help='name of TickTick project section to be created')
+    parser.add_argument('--project_id', help='TickTick project id')
+    parser.add_argument('--section_id', help='TickTick section id')
+    parser.add_argument('--task_id', help='TickTick task id')
+    parser.add_argument('--content', help='content of the task')
     args = parser.parse_args()
 
-    if args.mode == 'add_new_task' and args.new_task_name:
-        tt.task_manager.add_new_task(task={
-            'title': args.new_task_name,
-            'projectId': args.project_id if args.project_id else None,
-            'columnId': args.section_id if args.section_id else None,
-            'tags': ['notion']
-        })
-    elif args.mode == 'get_task_focus_duration' and args.task_id:
-        task_duration = tt.task_manager.get_task_focus_duration(args.task_id)
-        print(task_duration / 3600)  # convert output to unit hour
-    elif args.mode == 'add_new_project' and args.new_project_name:
-        tt.project_manager.add_new_project(project={'name': args.new_project_name})
-    elif args.mode == 'add_new_project_section' and args.new_section_name and args.project_id:
-        tt.project_manager.add_new_project_section(project_id=args.project_id, section_names=[args.new_section_name])
+    mode_actions = {
+        'add_new_task': lambda: print(tt.task_manager.add_new_task(task=build_task_config(args, True))),
+        'update_task': lambda: tt.task_manager.update_task(args.task_id, build_task_config(args)),
+        'get_task_focus_duration': lambda: print(tt.task_manager.get_task_focus_duration(args.task_id) / 3600),
+        'add_new_project': lambda: print(tt.project_manager.add_new_project(project={'name': args.project_name})),
+        'update_project': lambda: tt.project_manager.update_project(args.project_id, project={'name': args.project_name}),
+        'add_new_project_section': lambda: print(tt.project_manager.add_new_project_section(args.project_id, section_names=[args.section_name])),
+        'update_project_section_name': lambda: tt.project_manager.update_project_section_name(args.section_id, args.project_id, args.section_name)
+    }
+
+    mode_actions.get(args.mode)()
 
 
 if __name__ == '__main__':

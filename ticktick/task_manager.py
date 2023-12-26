@@ -15,6 +15,7 @@ class PriorityLevel(Enum):
 
 class TaskConfig(TypedDict):
     title: str
+    id: Optional[str]
     projectId: Optional[str]
     columnId: Optional[str]  # project section id
     content: Optional[str]
@@ -38,9 +39,10 @@ class TaskManager:
         Returns:
             str: task id
         """
+        if not task["title"]:
+            raise ValueError("A task name title must be provided for creating a task.")
         url = f'{BASE_URL}{API_ENDPOINTS["AddTask"]}'
         result = self.session.post(url, json=task).json()
-        Utils.json_pretty_print(result)
         return result["id"]
 
     def get_task_by_id(self, task_id) -> any:
@@ -54,7 +56,6 @@ class TaskManager:
         """
         url = f'{BASE_URL}{API_ENDPOINTS["GetTask"].replace("{task_id}", task_id)}'
         result = self.session.get(url).json()
-        Utils.json_pretty_print(result)
         return result
 
     def get_task_focus_duration(self, task_id) -> int:
@@ -86,7 +87,20 @@ class TaskManager:
         Returns:
             list[str]: list of task id
         """
-        url = f'{BASE_URL}{API_ENDPOINTS["BatchAddTask"]}'
+        url = f'{BASE_URL}{API_ENDPOINTS["BatchTask"]}'
         result = self.session.post(url, json={"add": tasks}).json()
-        Utils.json_pretty_print(result)
         return result["id2etag"].keys()
+
+    def update_task(self, task_id: str, task: TaskConfig) -> any:
+        """Update task configuration for existing task.
+
+        Raises:
+            ValueError: A task_id must be provided for updating a task.
+        """
+        if not task_id:
+            raise ValueError("A task_id must be provided for updating a task.")
+        url = f'{BASE_URL}{API_ENDPOINTS["BatchTask"]}'
+        original_task = self.get_task_by_id(task_id)
+        for key, value in task.items():
+            original_task[key] = value
+        self.session.post(url, json={"update": [original_task]})

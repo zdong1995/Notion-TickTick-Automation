@@ -12,10 +12,11 @@ API_ENDPOINTS = {
     # task API
     'AddTask': '/task',
     'GetTask': '/task/{task_id}',
-    'BatchAddTask': '/batch/task',
+    'BatchTask': '/batch/task',
     # project API
     'AddProject': '/project',
     'GetAllProjects': '/projects',
+    'BatchProject': '/batch/project',
     'ProjectSection': '/column',
     'GetProjectSections': '/column/project/{project_id}',
 }
