@@ -1,0 +1,240 @@
+{
+  "name": "Complete_TickTick_Task_to_Notion",
+  "nodes": [
+    {
+      "parameters": {
+        "command": "cat /tmp/token.txt"
+      },
+      "id": "41fc637d-3a1b-4393-85bc-729aeb38bc24",
+      "name": "Get Token",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        360,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.ticktick.com/api/v2/project/all/completed",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "={{ $now.minus({minutes:1}).setZone('UTC').toISO().slice(0, 17).replace(/-/g, \"-\").replace(\"T\", \" \") + \"00\"}}"
+            },
+            {
+              "name": "to",
+              "value": "={{ $now.setZone('UTC').toISO().slice(0, 17).replace(/-/g, \"-\").replace(\"T\", \" \") + \"59\"}}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Cookie",
+              "value": "=t= {{  $json.stdout }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "409e4361-9a75-4503-af9f-5f403d87119b",
+      "name": "Get Completed Tasks",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        540,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Notes\nIf original Notion page title was updated, the original URL in TickTick can still be used to locate the page.",
+        "height": 80,
+        "width": 745
+      },
+      "id": "fa81d3e0-dfa2-45d9-a6d1-fa4784b58921",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        380,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('Get Completed Tasks').item.json.content }}",
+              "operation": "contains",
+              "value2": "[Notion URL]"
+            },
+            {
+              "value1": "={{ $json.tags }}",
+              "operation": "contains",
+              "value2": "notion"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "id": "b8e3ecea-eee6-4c4e-82c4-a67b13d9153e",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        740,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=cd /home/node/Notion-TickTick-Automation/ticktick && python3 main.py get_task_focus_duration --task_id {{ $('IF').item.json.id }}"
+      },
+      "id": "e809b9df-f39b-4331-a7ac-092705a291c9",
+      "name": "Get Task Execution Time",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        960,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('IF').item.json[\"content\"].toString().match(/\\[Notion URL]\\((https:\\/\\/[^\\s)]+)/)[1] }}",
+          "mode": "url"
+        },
+        "simple": false,
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Status|status",
+              "statusValue": "Done"
+            },
+            {
+              "key": "Actual / h|number",
+              "numberValue": "={{ parseFloat($('Get Task Execution Time').item.json[\"stdout\"]) }}"
+            },
+            {
+              "key": "Completed Date|date",
+              "date": "={{ $now.toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e427bcaa-f054-483b-90a0-c78152a5b373",
+      "name": "Update Notion Status",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        320
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "27bb89cd-bc61-4198-8241-146fa9fce432",
+      "name": "Minutely Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        340
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get Token": {
+      "main": [
+        [
+          {
+            "node": "Get Completed Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Completed Tasks": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Get Task Execution Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Task Execution Time": {
+      "main": [
+        [
+          {
+            "node": "Update Notion Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Minutely Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ddd87517-6d0d-474c-bcca-819552cdb295",
+  "id": "nswDCT8WUoAfmkfP",
+  "meta": {
+    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+  },
+  "tags": []
+}

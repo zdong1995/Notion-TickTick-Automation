@@ -1,0 +1,160 @@
+{
+  "name": "Add_Notion_Project_to_TickTick",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8ba47be9-2d15-4217-b28b-2881c6587cec",
+      "name": "Loop",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        440,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=cd /home/node/Notion-TickTick-Automation/ticktick && python3 main.py add_new_project --project_name \"{{ $('Loop').item.json.properties.Name.title[0].text.content }}\""
+      },
+      "id": "dda8c52b-0d42-4760-b1c1-d851e40b4398",
+      "name": "Add New Project",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        660,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('Loop').item.json.url }}",
+          "mode": "url"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "TickTick Entity ID|rich_text",
+              "textContent": "={{ $('Add New Project').item.json[\"stdout\"] }}"
+            },
+            {
+              "key": "Last Synced Name|rich_text",
+              "textContent": "={{ $('Loop').item.json.properties.Name.title[0].plain_text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "52f0fca0-6f29-4fa9-a47d-12c5ac7e35a5",
+      "name": "Update Notion Project ID",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        860,
+        440
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "databaseId": {
+          "__rl": true,
+          "value": "1af550a6-4363-4da8-9d0e-9c38b286eba8",
+          "mode": "list",
+          "cachedResultName": "Projects",
+          "cachedResultUrl": "https://www.notion.so/1af550a643634da89d0e9c38b286eba8"
+        },
+        "simple": false
+      },
+      "id": "d1b39b18-7522-47d8-8f07-246e227a85a3",
+      "name": "New Notion Project Created",
+      "type": "n8n-nodes-base.notionTrigger",
+      "typeVersion": 1,
+      "position": [
+        220,
+        420
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Loop": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Add New Project",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add New Project": {
+      "main": [
+        [
+          {
+            "node": "Update Notion Project ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Notion Project ID": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Notion Project Created": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6b7b3f76-a6e8-4366-91fb-5e8bdfc4f069",
+  "id": "TSCbAo2yna98Eo5n",
+  "meta": {
+    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+  },
+  "tags": []
+}

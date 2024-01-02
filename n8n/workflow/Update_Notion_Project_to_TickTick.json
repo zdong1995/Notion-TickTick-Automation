@@ -1,0 +1,219 @@
+{
+  "name": "Update_Notion_Project_to_TickTick",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "27868ea9-12aa-4cd1-b04a-6a275a6c9943",
+      "name": "Loop",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        320,
+        360
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5c29ff1b-2028-481b-803f-79e795232a54",
+      "name": "Done",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('Loop').item.json.url }}",
+          "mode": "url"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Last Synced Name|rich_text",
+              "textContent": "={{ $('Loop').item.json.properties.Name.title[0].plain_text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "47f87bbc-d223-46f9-bef2-fe509cdd7fc2",
+      "name": "Update Notion State",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        940,
+        320
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.properties['Last Synced Name'].rich_text[0].text.content }}",
+              "operation": "notEqual",
+              "value2": "={{ $json.properties.Name.title[0].text.content }}"
+            }
+          ]
+        }
+      },
+      "id": "c620d12b-b82b-4e8d-a508-c163d342dbd0",
+      "name": "If Name Updated",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        540,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=cd /home/node/Notion-TickTick-Automation/ticktick && python3 main.py update_project --project_id {{ $('Loop').item.json.properties['TickTick Entity ID'].rich_text[0].text.content }} --project_name \"{{ $('Loop').item.json.properties.Name.title[0].text.content }}\" "
+      },
+      "id": "14e06870-1f88-49ef-92b1-86b58b9b84ba",
+      "name": "Update Project",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        760,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "unit": "minutes"
+            }
+          ]
+        },
+        "event": "pagedUpdatedInDatabase",
+        "databaseId": {
+          "__rl": true,
+          "value": "1af550a6-4363-4da8-9d0e-9c38b286eba8",
+          "mode": "list",
+          "cachedResultName": "Projects",
+          "cachedResultUrl": "https://www.notion.so/1af550a643634da89d0e9c38b286eba8"
+        },
+        "simple": false
+      },
+      "id": "4bb0405c-6854-4505-8815-c35d3ac82102",
+      "name": "Notion Project Updated",
+      "type": "n8n-nodes-base.notionTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        360
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Loop": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If Name Updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Done": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Notion State": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Name Updated": {
+      "main": [
+        [
+          {
+            "node": "Update Project",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Project": {
+      "main": [
+        [
+          {
+            "node": "Update Notion State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Project Updated": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "67f41648-84c1-4299-bc02-fbac5d0acca5",
+  "id": "nUakdyvG4DBZ5pyC",
+  "meta": {
+    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+  },
+  "tags": []
+}

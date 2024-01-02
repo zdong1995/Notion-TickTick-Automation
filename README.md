@@ -8,7 +8,7 @@ Automation script to 2-way sync [Notion](https://www.notion.so) project and [Tic
 
 Unofficial TickTick V2 API implemented by Python with basic usage.
 
-### Prerequisite
+#### Prerequisite
 
 - Create `config` folder under `ticktick` folder and create `auth_config.yml` file inside `config` folder.
 
@@ -21,7 +21,7 @@ ticktick:
 
 - Simply run [api_test.ipynb](./ticktick/api_test.ipynb) to get familar with TickTick API and response object type.
 
-### Usage
+#### Usage
 
 - `refresh_token`: `python3 main.py refresh_token`
 - `add_new_task`: `python3 main.py add_new_task --task_name {TASK_NAME} --project_id {PROJECT_ID} --section_id {SECTION_ID} --content {CONTENT} --start_date {START_DATE} --due_date {DUE_DATE}`
@@ -36,3 +36,34 @@ ticktick:
 - `update_project`: `python3 main.py update_project --project_id {PROJECT_ID} --project_name {PROJECT_NAME}`
 - `add_new_project_section`: `python3 main.py add_new_project_section --section_name {SECTION_NAME} --project_id {PROJECT_ID}`
 - `update_project_section_name`: `python3 main.py update_project_section_name --project_id {PROJECT_ID} --section_id {SECTION_ID} --section_name {SECTION_NAME}`
+
+### N8N Integration
+
+#### Task 2-way Sync Automation
+
+##### Add_Notion_Task_to_TickTick
+
+[Workflow](./n8n/workflow/Add_Notion_Task_to_TickTick.json)
+![](./n8n/img/Add_Notion_Task_to_TickTick.png)
+
+##### Update_Notion_Task_to_TickTick
+
+[Workflow](./n8n/workflow/Update_Notion_Task_to_TickTick.json)
+![](./n8n/img/Update_Notion_Task_to_TickTick.png)
+
+##### Complete_TickTick_Task_to_Notion
+
+[Workflow](./n8n/workflow/Complete_TickTick_Task_to_Notion.json)
+![](./n8n/img/Complete_TickTick_Task_to_Notion.png)
+
+#### Project 2-way Sync Automation
+
+##### Add_Notion_Project_to_TickTick
+
+[Workflow](./n8n/workflow/Add_Notion_Project_to_TickTick.json)
+![](./n8n/img/Add_Notion_Project_to_TickTick.png)
+
+##### Update_Notion_Project_to_TickTick
+
+[Workflow](./n8n/workflow/Update_Notion_Project_to_TickTick.json)
+![](./n8n/img/Update_Notion_Project_to_TickTick.png)

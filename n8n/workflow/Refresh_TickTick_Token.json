@@ -1,0 +1,61 @@
+{
+  "name": "Refresh_TickTick_Token",
+  "nodes": [
+    {
+      "parameters": {
+        "command": "=cd /home/node/Notion-TickTick-Automation/ticktick && python3 main.py refresh_token"
+      },
+      "id": "52b67218-d540-479d-80a9-56edf3b18e48",
+      "name": "Refresh Token",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        680,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks"
+            }
+          ]
+        }
+      },
+      "id": "190b1175-e4dc-419a-93ef-6b8f0490c188",
+      "name": "Weekly Refresh Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        460,
+        460
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Weekly Refresh Trigger": {
+      "main": [
+        [
+          {
+            "node": "Refresh Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "35870999-646b-43a0-bd80-af7f6ee793da",
+  "id": "cg8zP2pGkcp2HAn5",
+  "meta": {
+    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+  },
+  "tags": []
+}
