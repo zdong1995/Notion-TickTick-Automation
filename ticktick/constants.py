@@ -1,9 +1,8 @@
 import secrets
 
-PASSWORD = {'username': 'REPLACE_WITH_YOUR_USERNAME',
-            'password': 'REPLACE_WITH_YOUR_PASSWORD'}
-
 TOKEN_FILE = '/tmp/token.txt'
+
+AUTH_CONFIG_FILE = './config/auth_config.yml'
 
 BASE_URL = 'https://api.ticktick.com/api/v2'
 

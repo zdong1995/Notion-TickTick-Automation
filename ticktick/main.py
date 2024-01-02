@@ -1,6 +1,9 @@
 import argparse
+
+import requests
 from task_manager import TaskConfig
 from ticktick_manager import TicktickManager
+from utils import Utils
 
 
 def build_task_config(args: argparse.Namespace, is_new_task: bool = False) -> TaskConfig:
@@ -18,7 +21,9 @@ def build_task_config(args: argparse.Namespace, is_new_task: bool = False) -> Ta
         'projectId': 'project_id',
         'columnId': 'section_id',
         'id': 'task_id',
-        'content': 'content'
+        'content': 'content',
+        'startDate': 'start_date',
+        'dueDate': 'due_date'
     }
     task_config: TaskConfig = {key: getattr(args, value) for key, value in config_props.items() if getattr(args, value)}
     if is_new_task:
@@ -37,9 +42,12 @@ def main():
     parser.add_argument('--section_id', help='TickTick section id')
     parser.add_argument('--task_id', help='TickTick task id')
     parser.add_argument('--content', help='content of the task')
+    parser.add_argument('--start_date', help='start date of the task, in format yyyy-MM-dd')
+    parser.add_argument('--due_date', help='due date of the task, in format yyyy-MM-dd')
     args = parser.parse_args()
 
     mode_actions = {
+        'refresh_token': lambda: tt.auth_and_refresh_token(),
         'add_new_task': lambda: print(tt.task_manager.add_new_task(task=build_task_config(args, True))),
         'update_task': lambda: tt.task_manager.update_task(args.task_id, build_task_config(args)),
         'get_task_focus_duration': lambda: print(tt.task_manager.get_task_focus_duration(args.task_id) / 3600),
