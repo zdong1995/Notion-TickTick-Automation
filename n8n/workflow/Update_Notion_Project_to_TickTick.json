@@ -27,46 +27,18 @@
     },
     {
       "parameters": {
-        "resource": "databasePage",
-        "operation": "update",
-        "pageId": {
-          "__rl": true,
-          "value": "={{ $('Loop').item.json.url }}",
-          "mode": "url"
-        },
-        "propertiesUi": {
-          "propertyValues": [
-            {
-              "key": "Last Synced Name|rich_text",
-              "textContent": "={{ $('Loop').item.json.properties.Name.title[0].plain_text }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "47f87bbc-d223-46f9-bef2-fe509cdd7fc2",
-      "name": "Update Notion State",
-      "type": "n8n-nodes-base.notion",
-      "typeVersion": 2,
-      "position": [
-        940,
-        320
-      ],
-      "credentials": {
-        "notionApi": {
-          "id": "bqxRAf0tUlKKG2nd",
-          "name": "Notion account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.properties['Last Synced Name'].rich_text[0].text.content }}",
+              "value1": "={{ $json.properties['Last Synced Name'].rich_text[0] != null }}",
+              "value2": "={{ true }}"
+            }
+          ],
+          "boolean": [
+            {
+              "value1": "={{ $json.properties.Name.title[0].text.content }}",
               "operation": "notEqual",
-              "value2": "={{ $json.properties.Name.title[0].text.content }}"
+              "value2": "={{ $json.properties['Last Synced Name'].rich_text[0].text.content }}"
             }
           ]
         }
@@ -106,10 +78,10 @@
         "event": "pagedUpdatedInDatabase",
         "databaseId": {
           "__rl": true,
-          "value": "1af550a6-4363-4da8-9d0e-9c38b286eba8",
+          "value": "1748fda6-970a-81a6-a420-f7014c03bb53",
           "mode": "list",
           "cachedResultName": "Projects",
-          "cachedResultUrl": "https://www.notion.so/1af550a643634da89d0e9c38b286eba8"
+          "cachedResultUrl": "https://www.notion.so/1748fda6970a81a6a420f7014c03bb53"
         },
         "simple": false
       },
@@ -127,6 +99,41 @@
           "name": "Notion account"
         }
       }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('Loop').item.json.url }}",
+          "mode": "url"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Last Synced Name|rich_text",
+              "textContent": "={{ $('Loop').item.json.properties.Name.title[0].plain_text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "47f87bbc-d223-46f9-bef2-fe509cdd7fc2",
+      "name": "Update Notion State",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        940,
+        320
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      },
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
@@ -148,17 +155,6 @@
         [
           {
             "node": "Loop",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update Notion State": {
-      "main": [
-        [
-          {
-            "node": "Done",
             "type": "main",
             "index": 0
           }
@@ -204,16 +200,27 @@
           }
         ]
       ]
+    },
+    "Update Notion State": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "67f41648-84c1-4299-bc02-fbac5d0acca5",
+  "versionId": "7277aae3-6537-480f-843b-c0b99370fcbb",
   "id": "nUakdyvG4DBZ5pyC",
   "meta": {
-    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+    "instanceId": "dd4285230ae27461e688787c75f01f50e8fa71ab079f366d75ca7d3ebda98c44"
   },
   "tags": []
 }

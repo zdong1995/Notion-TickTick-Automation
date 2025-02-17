@@ -50,86 +50,6 @@
       ]
     },
     {
-      "parameters": {
-        "resource": "databasePage",
-        "operation": "update",
-        "pageId": {
-          "__rl": true,
-          "value": "={{ $('Is Task?').item.json.url }}",
-          "mode": "url"
-        },
-        "propertiesUi": {
-          "propertyValues": [
-            {
-              "key": "_Name|rich_text",
-              "textContent": "={{ $('Is Task?').item.json.properties.Name.title[0].text.content }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "76ce615a-407c-4b46-95d1-476be11086d6",
-      "name": "Update Notion Section TickTick ID",
-      "type": "n8n-nodes-base.notion",
-      "typeVersion": 2,
-      "position": [
-        980,
-        580
-      ],
-      "credentials": {
-        "notionApi": {
-          "id": "bqxRAf0tUlKKG2nd",
-          "name": "Notion account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "databasePage",
-        "operation": "update",
-        "pageId": {
-          "__rl": true,
-          "value": "={{ $('Is Task?').item.json.url }}",
-          "mode": "url"
-        },
-        "propertiesUi": {
-          "propertyValues": [
-            {
-              "key": "_Section|rich_text",
-              "textContent": "={{ $('Is Task?').item.json.properties['Section ID'].rollup.array[0].rich_text[0].text.content }}"
-            },
-            {
-              "key": "_Name|rich_text",
-              "textContent": "={{ $('Is Task?').item.json.properties.Name.title[0].text.content }}"
-            },
-            {
-              "key": "_Start Date|rich_text",
-              "textContent": "={{ $('Is Task?').item.json.properties['Start Date'].date.start }}"
-            },
-            {
-              "key": "_End Date|rich_text",
-              "textContent": "={{ $('Is Task?').item.json.properties['End Date'].date.start }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "142c40ad-dd4e-42cd-8275-b934dc4cfd84",
-      "name": "Update Notion Task TickTick ID",
-      "type": "n8n-nodes-base.notion",
-      "typeVersion": 2,
-      "position": [
-        980,
-        360
-      ],
-      "credentials": {
-        "notionApi": {
-          "id": "bqxRAf0tUlKKG2nd",
-          "name": "Notion account"
-        }
-      }
-    },
-    {
       "parameters": {},
       "id": "2ee9a19b-72e8-438c-9807-96183c0ef3f4",
       "name": "Iteration Completed",
@@ -147,7 +67,7 @@
             {
               "value1": "={{ $json.properties.Name.title[0].text.content }}",
               "operation": "notEqual",
-              "value2": "={{ $json.properties['Last Synced Name'].rich_text[0].text.content }}"
+              "value2": "={{ $json.properties['_Name'].rich_text[0].text.content }}"
             }
           ]
         }
@@ -166,24 +86,25 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.properties.Name.title[0].text.content }}",
-              "operation": "notEqual",
-              "value2": "={{ $json.properties['_Name'].rich_text[0].text.content }}"
+              "value1": "={{ $json.properties['_Section'].rich_text[0] != null && $json.properties['_Name'].rich_text[0] != null }}",
+              "value2": "={{ true }}"
             },
             {
-              "value1": "={{ $json.properties['Section ID'].rollup.array[0].rich_text[0].text.content }}",
+              "value1": "={{ ($json.properties['Name'].title[0].text.content != $json.properties['_Name'].rich_text[0].text.content) && ($json.properties['Section ID'].rollup.array[0].rich_text[0].text.content != $json.properties['_Section'].rich_text[0].text.content) }}",
               "operation": "notEqual",
-              "value2": "={{ $json.properties['_Section'].rich_text[0].text.content }}"
+              "value2": "={{ true }}"
+            }
+          ],
+          "boolean": [
+            {
+              "value1": "={{ ($json.properties['Start Date'].date != null) && ($ifEmpty($json.properties['Start Date'].date.start, \"\") != $ifEmpty($json.properties['_Start Date'].rich_text[0].text.content, \"\")) }}",
+              "operation": "notEqual",
+              "value2": "={{ true }}"
             },
             {
-              "value1": "={{ $json.properties['Start Date'].date.start }}",
+              "value1": "={{ ($json.properties['End Date'].date != null) && ($ifEmpty($json.properties['End Date'].date.start, \"\") != $ifEmpty($json.properties['_End Date'].rich_text[0].text.content, \"\")) }}",
               "operation": "notEqual",
-              "value2": "={{ $json.properties['_Start Date'].rich_text[0].text.content }}"
-            },
-            {
-              "value1": "={{ $json.properties['End Date'].date.start }}",
-              "operation": "notEqual",
-              "value2": "={{ $json.properties['_End Date'].rich_text[0].text.content }}"
+              "value2": "={{ true }}"
             }
           ]
         },
@@ -237,10 +158,10 @@
         "event": "pagedUpdatedInDatabase",
         "databaseId": {
           "__rl": true,
-          "value": "b25e7101-70ca-40a2-9420-43d5cb38c615",
+          "value": "1748fda6-970a-8149-9c34-d7a60dcf2063",
           "mode": "list",
-          "cachedResultName": "Milestones",
-          "cachedResultUrl": "https://www.notion.so/b25e710170ca40a2942043d5cb38c615"
+          "cachedResultName": "Tasks",
+          "cachedResultUrl": "https://www.notion.so/1748fda6970a81499c34d7a60dcf2063"
         },
         "simple": false
       },
@@ -258,6 +179,88 @@
           "name": "Notion account"
         }
       }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('Is Task?').item.json.url }}",
+          "mode": "url"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "_Section|rich_text",
+              "textContent": "={{ $('Is Task?').item.json.properties['Section ID'].rollup.array[0].rich_text[0].text.content }}"
+            },
+            {
+              "key": "_Name|rich_text",
+              "textContent": "={{ $('Is Task?').item.json.properties.Name.title[0].text.content }}"
+            },
+            {
+              "key": "_Start Date|rich_text",
+              "textContent": "={{ \n$ifEmpty( $('Is Task?').item.json.properties['Start Date'].start, \"\") }}"
+            },
+            {
+              "key": "_End Date|rich_text",
+              "textContent": "={{ \n$ifEmpty( $('Is Task?').item.json.properties['End Date'].start, \"\") }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "142c40ad-dd4e-42cd-8275-b934dc4cfd84",
+      "name": "Update Notion Task TickTick ID",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        980,
+        360
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $('Is Task?').item.json.url }}",
+          "mode": "url"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "_Name|rich_text",
+              "textContent": "={{ $('Is Task?').item.json.properties.Name.title[0].text.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "76ce615a-407c-4b46-95d1-476be11086d6",
+      "name": "Update Notion Section TickTick ID",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        980,
+        580
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      },
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
@@ -286,28 +289,6 @@
         [
           {
             "node": "Is Name Updated",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update Notion Section TickTick ID": {
-      "main": [
-        [
-          {
-            "node": "Iteration Completed",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update Notion Task TickTick ID": {
-      "main": [
-        [
-          {
-            "node": "Iteration Completed",
             "type": "main",
             "index": 0
           }
@@ -379,16 +360,38 @@
           }
         ]
       ]
+    },
+    "Update Notion Task TickTick ID": {
+      "main": [
+        [
+          {
+            "node": "Iteration Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Notion Section TickTick ID": {
+      "main": [
+        [
+          {
+            "node": "Iteration Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "bf6bdee0-48e4-40c8-8f05-a36b76943bf4",
+  "versionId": "7923c3d3-d6fb-4244-aef4-c2763c9d3d9f",
   "id": "CP0xiVl6jqm1mTH1",
   "meta": {
-    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+    "instanceId": "dd4285230ae27461e688787c75f01f50e8fa71ab079f366d75ca7d3ebda98c44"
   },
   "tags": []
 }

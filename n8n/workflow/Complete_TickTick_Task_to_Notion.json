@@ -22,7 +22,7 @@
           "parameters": [
             {
               "name": "from",
-              "value": "={{ $now.minus({minutes:1}).setZone('UTC').toISO().slice(0, 17).replace(/-/g, \"-\").replace(\"T\", \" \") + \"00\"}}"
+              "value": "={{ $now.minus({minutes:5}).setZone('UTC').toISO().slice(0, 17).replace(/-/g, \"-\").replace(\"T\", \" \") + \"00\"}}"
             },
             {
               "name": "to",
@@ -153,8 +153,7 @@
         "rule": {
           "interval": [
             {
-              "field": "minutes",
-              "minutesInterval": 1
+              "field": "minutes"
             }
           ]
         }
@@ -231,10 +230,10 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "ddd87517-6d0d-474c-bcca-819552cdb295",
+  "versionId": "e0f15572-1d2c-48e5-bab3-d053b9991215",
   "id": "nswDCT8WUoAfmkfP",
   "meta": {
-    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+    "instanceId": "dd4285230ae27461e688787c75f01f50e8fa71ab079f366d75ca7d3ebda98c44"
   },
   "tags": []
 }

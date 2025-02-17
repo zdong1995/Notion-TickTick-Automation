@@ -19,7 +19,8 @@
         "rule": {
           "interval": [
             {
-              "field": "weeks"
+              "field": "weeks",
+              "weeksInterval": 2
             }
           ]
         }
@@ -52,10 +53,10 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "35870999-646b-43a0-bd80-af7f6ee793da",
+  "versionId": "e328f1fd-fc53-4c0a-b21f-ee5a91258dfe",
   "id": "cg8zP2pGkcp2HAn5",
   "meta": {
-    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+    "instanceId": "dd4285230ae27461e688787c75f01f50e8fa71ab079f366d75ca7d3ebda98c44"
   },
   "tags": []
 }

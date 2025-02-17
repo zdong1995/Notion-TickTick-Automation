@@ -29,6 +29,39 @@
     },
     {
       "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "databaseId": {
+          "__rl": true,
+          "value": "1748fda6-970a-81a6-a420-f7014c03bb53",
+          "mode": "list",
+          "cachedResultName": "Projects",
+          "cachedResultUrl": "https://www.notion.so/1748fda6970a81a6a420f7014c03bb53"
+        },
+        "simple": false
+      },
+      "id": "d1b39b18-7522-47d8-8f07-246e227a85a3",
+      "name": "New Notion Project Created",
+      "type": "n8n-nodes-base.notionTrigger",
+      "typeVersion": 1,
+      "position": [
+        220,
+        420
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "bqxRAf0tUlKKG2nd",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
         "resource": "databasePage",
         "operation": "update",
         "pageId": {
@@ -63,40 +96,8 @@
           "id": "bqxRAf0tUlKKG2nd",
           "name": "Notion account"
         }
-      }
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "databaseId": {
-          "__rl": true,
-          "value": "1af550a6-4363-4da8-9d0e-9c38b286eba8",
-          "mode": "list",
-          "cachedResultName": "Projects",
-          "cachedResultUrl": "https://www.notion.so/1af550a643634da89d0e9c38b286eba8"
-        },
-        "simple": false
       },
-      "id": "d1b39b18-7522-47d8-8f07-246e227a85a3",
-      "name": "New Notion Project Created",
-      "type": "n8n-nodes-base.notionTrigger",
-      "typeVersion": 1,
-      "position": [
-        220,
-        420
-      ],
-      "credentials": {
-        "notionApi": {
-          "id": "bqxRAf0tUlKKG2nd",
-          "name": "Notion account"
-        }
-      }
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
@@ -124,7 +125,7 @@
         ]
       ]
     },
-    "Update Notion Project ID": {
+    "New Notion Project Created": {
       "main": [
         [
           {
@@ -135,7 +136,7 @@
         ]
       ]
     },
-    "New Notion Project Created": {
+    "Update Notion Project ID": {
       "main": [
         [
           {
@@ -151,10 +152,10 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "6b7b3f76-a6e8-4366-91fb-5e8bdfc4f069",
+  "versionId": "1addbb6a-a96b-4f81-a03f-6e91a07c71cc",
   "id": "TSCbAo2yna98Eo5n",
   "meta": {
-    "instanceId": "8cdf33baa8fe66be51cc157a79f9d7702f8ec6d27a67bedcc27363015cf42837"
+    "instanceId": "dd4285230ae27461e688787c75f01f50e8fa71ab079f366d75ca7d3ebda98c44"
   },
   "tags": []
 }
