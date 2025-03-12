@@ -24,7 +24,7 @@ ticktick:
 #### Usage
 
 - `refresh_token`: `python3 main.py refresh_token`
-- `add_new_task`: `python3 main.py add_new_task --task_name {TASK_NAME} --project_id {PROJECT_ID} --section_id {SECTION_ID} --content {CONTENT} --start_date {START_DATE} --due_date {DUE_DATE}`
+- `add_new_task`: `python3 main.py add_new_task --task_name {TASK_NAME} --project_id {PROJECT_ID} --section_id {SECTION_ID} --content {CONTENT} --start_date {START_DATE} --due_date {DUE_DATE} --priority {PRIORITY}`
   - if no project section declared, task will be added into first section: `python3 main.py add_new_task --task_name {TASK_NAME} --project_id {PROJECT_ID}`
   - if no project section and project declared, task will be added into inbox: `python3 main.py add_new_task --task_name {TASK_NAME}`
   - start_date and due_date should be in UTC format, example: `2024-01-01T05:00:00.000+0000`

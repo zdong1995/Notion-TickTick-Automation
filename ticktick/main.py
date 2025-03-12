@@ -23,9 +23,11 @@ def build_task_config(args: argparse.Namespace, is_new_task: bool = False) -> Ta
         'id': 'task_id',
         'content': 'content',
         'startDate': 'start_date',
-        'dueDate': 'due_date'
+        'dueDate': 'due_date',
+        'priority': 'priority'
     }
-    task_config: TaskConfig = {key: getattr(args, value) for key, value in config_props.items() if getattr(args, value)}
+    task_config: TaskConfig = {key: getattr(
+        args, value) for key, value in config_props.items() if getattr(args, value)}
     if is_new_task:
         task_config.update({'tags': ['notion']})
     return task_config
@@ -36,14 +38,19 @@ def main():
     tt = TicktickManager()
     parser.add_argument('mode', help='command mode')
     parser.add_argument('--task_name', help='name of TickTick task')
-    parser.add_argument('--project_name', help='name of TickTick project to be created')
-    parser.add_argument('--section_name', help='name of TickTick project section to be created')
+    parser.add_argument(
+        '--project_name', help='name of TickTick project to be created')
+    parser.add_argument(
+        '--section_name', help='name of TickTick project section to be created')
     parser.add_argument('--project_id', help='TickTick project id')
     parser.add_argument('--section_id', help='TickTick section id')
     parser.add_argument('--task_id', help='TickTick task id')
     parser.add_argument('--content', help='content of the task')
-    parser.add_argument('--start_date', help='start date of the task, in format yyyy-MM-dd')
-    parser.add_argument('--due_date', help='due date of the task, in format yyyy-MM-dd')
+    parser.add_argument('--priority', type=int, help='priority of the task')
+    parser.add_argument(
+        '--start_date', help='start date of the task, in format yyyy-MM-dd')
+    parser.add_argument(
+        '--due_date', help='due date of the task, in format yyyy-MM-dd')
     args = parser.parse_args()
 
     mode_actions = {
