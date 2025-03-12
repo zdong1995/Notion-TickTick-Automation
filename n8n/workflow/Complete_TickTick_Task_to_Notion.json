@@ -5,13 +5,13 @@
       "parameters": {
         "command": "cat /tmp/token.txt"
       },
-      "id": "41fc637d-3a1b-4393-85bc-729aeb38bc24",
+      "id": "6e894e8f-feae-4846-9136-ca7dddbf75eb",
       "name": "Get Token",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        360,
-        340
+        -600,
+        20
       ]
     },
     {
@@ -41,13 +41,13 @@
         },
         "options": {}
       },
-      "id": "409e4361-9a75-4503-af9f-5f403d87119b",
+      "id": "cf3e9c89-d896-4775-974c-a229f8bad873",
       "name": "Get Completed Tasks",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        540,
-        340
+        -420,
+        20
       ]
     },
     {
@@ -56,13 +56,13 @@
         "height": 80,
         "width": 745
       },
-      "id": "fa81d3e0-dfa2-45d9-a6d1-fa4784b58921",
+      "id": "f6e58bf1-4bda-4398-a05c-3522a95c4378",
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        380,
-        520
+        -400,
+        400
       ]
     },
     {
@@ -83,26 +83,26 @@
         },
         "combineOperation": "any"
       },
-      "id": "b8e3ecea-eee6-4c4e-82c4-a67b13d9153e",
+      "id": "7740a8cc-6760-4ad1-87e7-c4b88deed153",
       "name": "IF",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        740,
-        340
+        0,
+        40
       ]
     },
     {
       "parameters": {
         "command": "=cd /home/node/Notion-TickTick-Automation/ticktick && python3 main.py get_task_focus_duration --task_id {{ $('IF').item.json.id }}"
       },
-      "id": "e809b9df-f39b-4331-a7ac-092705a291c9",
+      "id": "4defcd47-5870-45a5-a169-27d284590f76",
       "name": "Get Task Execution Time",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        960,
-        320
+        220,
+        -40
       ]
     },
     {
@@ -122,7 +122,7 @@
               "statusValue": "Done"
             },
             {
-              "key": "Actual / h|number",
+              "key": "Actual Hours|number",
               "numberValue": "={{ parseFloat($('Get Task Execution Time').item.json[\"stdout\"]) }}"
             },
             {
@@ -133,17 +133,17 @@
         },
         "options": {}
       },
-      "id": "e427bcaa-f054-483b-90a0-c78152a5b373",
+      "id": "fed30dc8-41f1-4a3f-959d-a88be93413a9",
       "name": "Update Notion Status",
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2,
       "position": [
-        1160,
-        320
+        420,
+        -40
       ],
       "credentials": {
         "notionApi": {
-          "id": "bqxRAf0tUlKKG2nd",
+          "id": "PO6skvK1veiAK5Th",
           "name": "Notion account"
         }
       }
@@ -158,14 +158,38 @@
           ]
         }
       },
-      "id": "27bb89cd-bc61-4198-8241-146fa9fce432",
+      "id": "705557d6-46e5-4502-8baf-2501121119e7",
       "name": "Minutely Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.1,
       "position": [
-        160,
-        340
+        -800,
+        20
       ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -200,
+        20
+      ],
+      "id": "75509466-a021-4183-9088-2294d8184019",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        600,
+        140
+      ],
+      "id": "8dabbb45-c29f-441a-9dd3-2a5554b05b8d",
+      "name": "Iteration Completed"
     }
   ],
   "pinData": {},
@@ -185,7 +209,7 @@
       "main": [
         [
           {
-            "node": "IF",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -224,16 +248,51 @@
           }
         ]
       ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Notion Status": {
+      "main": [
+        [
+          {
+            "node": "Iteration Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Iteration Completed": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e0f15572-1d2c-48e5-bab3-d053b9991215",
-  "id": "nswDCT8WUoAfmkfP",
+  "versionId": "1b1e424d-8f7a-4f15-876c-e6b94b91bd99",
   "meta": {
-    "instanceId": "dd4285230ae27461e688787c75f01f50e8fa71ab079f366d75ca7d3ebda98c44"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c8a036b61a7da4913e77729f80edafe0867dc68336b782e05d91338bfe239bbf"
   },
+  "id": "GhAAeM3YHmBYrrvp",
   "tags": []
 }

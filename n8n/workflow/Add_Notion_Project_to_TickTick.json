@@ -5,60 +5,27 @@
       "parameters": {
         "options": {}
       },
-      "id": "8ba47be9-2d15-4217-b28b-2881c6587cec",
+      "id": "06559a40-933b-417f-8997-83c9c6a9e0c8",
       "name": "Loop",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        440,
-        420
+        600,
+        -140
       ]
     },
     {
       "parameters": {
         "command": "=cd /home/node/Notion-TickTick-Automation/ticktick && python3 main.py add_new_project --project_name \"{{ $('Loop').item.json.properties.Name.title[0].text.content }}\""
       },
-      "id": "dda8c52b-0d42-4760-b1c1-d851e40b4398",
+      "id": "5fe5bad2-c405-468c-8b91-5151da280343",
       "name": "Add New Project",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        660,
-        440
+        820,
+        -120
       ]
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "databaseId": {
-          "__rl": true,
-          "value": "1748fda6-970a-81a6-a420-f7014c03bb53",
-          "mode": "list",
-          "cachedResultName": "Projects",
-          "cachedResultUrl": "https://www.notion.so/1748fda6970a81a6a420f7014c03bb53"
-        },
-        "simple": false
-      },
-      "id": "d1b39b18-7522-47d8-8f07-246e227a85a3",
-      "name": "New Notion Project Created",
-      "type": "n8n-nodes-base.notionTrigger",
-      "typeVersion": 1,
-      "position": [
-        220,
-        420
-      ],
-      "credentials": {
-        "notionApi": {
-          "id": "bqxRAf0tUlKKG2nd",
-          "name": "Notion account"
-        }
-      }
     },
     {
       "parameters": {
@@ -83,21 +50,55 @@
         },
         "options": {}
       },
-      "id": "52f0fca0-6f29-4fa9-a47d-12c5ac7e35a5",
+      "id": "f7f4e46f-c5f2-49f1-bbc1-6480e3504449",
       "name": "Update Notion Project ID",
       "type": "n8n-nodes-base.notion",
       "typeVersion": 2,
       "position": [
-        860,
-        440
+        1020,
+        -120
       ],
       "credentials": {
         "notionApi": {
-          "id": "bqxRAf0tUlKKG2nd",
+          "id": "PO6skvK1veiAK5Th",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "custom",
+              "cronExpression": "0-59/2 * * * *"
+            }
+          ]
+        },
+        "databaseId": {
+          "__rl": true,
+          "value": "1748fda6-970a-81a6-a420-f7014c03bb53",
+          "mode": "list",
+          "cachedResultName": "Projects",
+          "cachedResultUrl": "https://www.notion.so/1748fda6970a81a6a420f7014c03bb53"
+        },
+        "simple": false
+      },
+      "id": "4417bac5-27fa-462b-a0ae-a0cb6b7e68aa",
+      "name": "New Notion Project Created",
+      "type": "n8n-nodes-base.notionTrigger",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -140
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "PO6skvK1veiAK5Th",
           "name": "Notion account"
         }
       },
-      "onError": "continueRegularOutput"
+      "notes": "every 2 minutes, starting at minute 0. This means it runs at minute 0, 2, 4, …, 58—exactly the even-numbered minutes."
     }
   ],
   "pinData": {},
@@ -125,7 +126,7 @@
         ]
       ]
     },
-    "New Notion Project Created": {
+    "Update Notion Project ID": {
       "main": [
         [
           {
@@ -136,7 +137,7 @@
         ]
       ]
     },
-    "Update Notion Project ID": {
+    "New Notion Project Created": {
       "main": [
         [
           {
@@ -152,10 +153,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1addbb6a-a96b-4f81-a03f-6e91a07c71cc",
-  "id": "TSCbAo2yna98Eo5n",
+  "versionId": "efbae41b-44f5-499f-85fb-30be36734315",
   "meta": {
-    "instanceId": "dd4285230ae27461e688787c75f01f50e8fa71ab079f366d75ca7d3ebda98c44"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c8a036b61a7da4913e77729f80edafe0867dc68336b782e05d91338bfe239bbf"
   },
+  "id": "oPWiLjUY6oO60kAQ",
   "tags": []
 }
